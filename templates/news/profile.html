@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card bg-dark border-danger text-white p-4">
+            <div class="d-flex align-items-center mb-4">
+                <img src="{{ user.profile.avatar.url }}" class="rounded-circle me-3" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #ff0040;">
+                <div>
+                    <h2>{{ user.username }}</h2>
+                    <p class="text-secondary">{{ user.email }}</p>
+                </div>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h4 class="text-danger">Настройки аккаунта</h4>
+                {{ u_form.as_p }}
+                <hr class="border-secondary">
+                <h4 class="text-danger">Личные данные</h4>
+                {{ p_form.as_p }}
+                <button type="submit" class="btn btn-red w-100 mt-3">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
