@@ -1,5 +1,8 @@
 import os
 from pathlib import Path
+from django.contrib.auth.models import User
+import os
+
 
 # Корень проекта
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -95,3 +98,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Автоматическое создание суперпользователя
+if not User.objects.filter(username='admin_maga').exists():
+    User.objects.create_superuser('admin_maga', 'admin@example.com', 'MagaPass123!')
