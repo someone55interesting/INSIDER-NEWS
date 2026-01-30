@@ -6,14 +6,32 @@ from .models import Article, Category, Comment
 from .forms import UserRegisterForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from .forms import UserUpdateForm, ProfileUpdateForm
-
+from django.db.models import Q
 
 def home(request):
-    # Берем все статьи и сортируем: новые сверху
-    articles = Article.objects.all().order_by('-created_at') 
+    query = request.GET.get('q') # Получаем текст поиска
+    categories = Category.objects.all() # Для бокового меню
     
-    # ВАЖНО: имя в кавычках 'articles' должно быть таким же, как в home.html
-    return render(request, 'news/home.html', {'articles': articles})
+    if query:
+        # Если ищем, то фильтруем всё подряд
+        articles = Article.objects.filter(
+            Q(title__icontains=query) | 
+            Q(content__icontains=query) |
+            Q(category__name__icontains=query) |
+            Q(tags__icontains=query)
+        ).distinct().order_by('-created_at')
+        hot_articles = None # При поиске "горячее" не выделяем
+    else:
+        # Если просто главная:
+        hot_articles = Article.objects.filter(is_hot=True).order_by('-created_at')[:3]
+        articles = Article.objects.filter(is_hot=False).order_by('-created_at')
+
+    context = {
+        'articles': articles,
+        'hot_articles': hot_articles,
+        'categories': categories, # Теперь категории доступны в шаблоне
+    }
+    return render(request, 'news/home.html', context)
 
 # 2. СТРАНИЦА КАТЕГОРИИ
 def category_detail(request, slug):
@@ -24,8 +42,8 @@ def category_detail(request, slug):
 # 3. ДЕТАЛЬНАЯ СТРАНИЦА НОВОСТИ + КОММЕНТАРИИ
 def article_detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
+    comments = article.comments.all().order_by('-created_at') # Берем все комменты к посту
     
-    # Если юзер отправил комментарий
     if request.method == 'POST' and request.user.is_authenticated:
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -33,12 +51,13 @@ def article_detail(request, pk):
             comment.article = article
             comment.user = request.user
             comment.save()
-            return redirect('article', pk=pk)
+            return redirect('article', pk=pk) # Перезагрузка, чтобы коммент появился
     else:
         form = CommentForm()
-    
+
     return render(request, 'news/article.html', {
         'article': article, 
+        'comments': comments, # Передаем комменты в шаблон
         'form': form
     })
 

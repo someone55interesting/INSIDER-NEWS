@@ -1,0 +1,49 @@
+#splash-screen {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); /* Плавное исчезновение фона */
+}
+
+#splash-text {
+    color: white;
+    font-size: 6rem; /* Сделаем побольше, чтоб солидно было */
+    font-family: 'Syncopate', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -10px; /* Начинаем со сжатых букв */
+    filter: blur(20px); /* Начинаем с сильного размытия */
+    opacity: 0;
+    animation: premiumReveal 2.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@keyframes premiumReveal {
+    0% {
+        opacity: 0;
+        filter: blur(20px);
+        letter-spacing: -10px;
+        transform: scale(0.9);
+    }
+    40% {
+        opacity: 1;
+        filter: blur(0px);
+        letter-spacing: 15px; /* Буквы плавно разъезжаются */
+        transform: scale(1);
+    }
+    80% {
+        opacity: 1;
+        filter: blur(0px);
+        letter-spacing: 20px;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 0;
+        filter: blur(10px);
+        letter-spacing: 25px;
+        transform: scale(1.1);
+    }
+}

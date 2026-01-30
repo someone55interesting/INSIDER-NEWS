@@ -7,146 +7,150 @@
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
-        :root {
-            --primary: #ff003c;
-            --bg: #030303;
+        :root { --primary: #ff003c; --bg: #030303; }
+        body { background-color: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; margin: 0; }
+        
+        /* Частицы — СТРОГО КРАСНЫЕ */
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
+
+        /* Splash-screen (Apple Style) */
+        #splash-screen { position: fixed; inset: 0; background: #000; display: flex; justify-content: center; align-items: center; z-index: 10000; transition: opacity 0.8s; }
+        #splash-text { color: white; font-size: 5rem; font-family: 'Syncopate'; font-weight: bold; opacity: 0; animation: appleReveal 2.5s forwards; }
+        @keyframes appleReveal { 
+            0% { opacity: 0; transform: scale(0.9); filter: blur(10px); }
+            50% { opacity: 1; transform: scale(1); filter: blur(0px); }
+            100% { opacity: 0; transform: scale(1.1); filter: blur(5px); }
         }
 
-        body {
-            background-color: var(--bg);
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            margin: 0;
-        }
+        /* Навигация */
+        .navbar { background: rgba(0, 0, 0, 0.7) !important; backdrop-filter: blur(15px); position: sticky; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .navbar-brand { font-family: 'Syncopate', sans-serif; letter-spacing: 5px; color: var(--primary) !important; text-shadow: 0 0 15px var(--primary); }
 
-        /* Контейнер для частиц */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1; /* Чтобы был за контентом */
-        }
-
-        /* Навигация с эффектом размытия */
-        .navbar {
-            background: rgba(0, 0, 0, 0.7) !important;
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem 0;
-        }
-
-        .navbar-brand {
-            font-family: 'Syncopate', sans-serif;
-            font-weight: 700;
-            letter-spacing: 5px;
-            color: var(--primary) !important;
-            text-shadow: 0 0 15px var(--primary);
-        }
-
-        /* Премиальные карточки */
-        .card {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.05) !important;
-            backdrop-filter: blur(10px);
-            border-radius: 0px; /* Острые углы выглядят строже и дороже */
-            transition: 0.5s;
-        }
-
-        .card:hover {
-            border-color: var(--primary) !important;
-            box-shadow: 0 0 30px rgba(255, 0, 60, 0.2);
-            transform: translateY(-5px);
-        }
+        /* Поиск */
+        .search-box-nav { position: relative; margin: 0 20px; }
+        .search-box-nav input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0; color: white; padding: 5px 15px; width: 200px; }
+        .search-box-nav button { background: none; border: none; color: var(--primary); position: absolute; right: 5px; top: 5px; }
 
         /* Кнопки */
-        .btn-cyber {
-            background: transparent;
-            color: white;
-            border: 1px solid white;
-            border-radius: 0;
-            padding: 10px 25px;
-            text-transform: uppercase;
-            font-family: 'Syncopate', sans-serif;
-            font-size: 10px;
-            transition: 0.3s;
-        }
+        .btn-cyber { background: transparent; color: white; border: 1px solid white; border-radius: 0; padding: 8px 20px; text-transform: uppercase; font-size: 10px; font-family: 'Syncopate'; transition: 0.3s; text-decoration: none; }
+        .btn-cyber:hover { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 20px var(--primary); color: white; }
 
-        .btn-cyber:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-            box-shadow: 0 0 20px var(--primary);
-            color: white;
-        }
-
-        /* Заголовки */
-        h1, h2, h3 {
-            font-family: 'Syncopate', sans-serif;
-            text-transform: uppercase;
-        }
-
-        /* Текстура шума поверх всего сайта */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_pnt.png');
-            opacity: 0.03;
-            pointer-events: none;
-            z-index: 9999;
-        }
+        /* Сайдбар (Аккуратный) */
+        .cat-link { color: #888; text-decoration: none; display: block; padding: 10px; font-family: 'Syncopate'; font-size: 0.7rem; transition: 0.3s; }
+        .cat-link:hover { color: var(--primary); padding-left: 10px; }
+        
+        /* ФИКС ПРОФИЛЯ */
+        .profile-fix label { color: var(--primary) !important; font-family: 'Syncopate'; font-size: 0.7rem; display: block; margin-top: 15px; }
+        .profile-fix input { background: rgba(255,255,255,0.05) !important; color: white !important; border: 1px solid #444 !important; border-radius: 0 !important; }
     </style>
 </head>
 <body>
-
-<div id="particles-js"></div>
-
-<nav class="navbar navbar-expand-lg navbar-dark mb-5">
-    <div class="container">
-        <a class="navbar-brand" href="/">INSIDER</a>
-        <div class="ms-auto">
-            {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" class="btn-cyber">Профиль</a>
-            {% else %}
-                <a href="{% url 'login' %}" class="btn-cyber">Login</a>
-            {% endif %}
-        </div>
-    </div>
-</nav>
-
-<div class="container">
-    {% block content %}{% endblock %}
+    <div id="splash-screen"><h1 id="splash-text">Здрасьте</h1></div>
+    <div id="particles-js"></div>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-5">
+        <div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<style>
+    .progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: transparent; z-index: 10001; }
+    .progress-bar { height: 3px; background: var(--primary); width: 0%; box-shadow: 0 0 10px var(--primary); }
+</style>
+
 <script>
-    particlesJS("particles-js", {
-        "particles": {
-            "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-            "color": { "value": "#ff003c" },
-            "shape": { "type": "circle" },
-            "opacity": { "value": 0.5, "random": false },
-            "size": { "value": 3, "random": true },
-            "line_linked": { "enable": true, "distance": 150, "color": "#ff003c", "opacity": 0.4, "width": 1 },
-            "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
-        },
-        "interactivity": {
-            "detect_on": "canvas",
-            "events": {
-                "onhover": { "enable": true, "mode": "grab" },
-                "onclick": { "enable": true, "mode": "push" },
-                "resize": true
-            },
-            "modes": {
-                "grab": { "distance": 200, "line_linked": { "opacity": 1 } }
-            }
-        },
-        "retina_detect": true
-    });
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("myBar").style.width = scrolled + "%";
+    };
 </script>
+
+        <div class="container">
+            <a class="navbar-brand" href="/">INSIDER</a>
+            
+            <div class="search-box-nav d-none d-md-block">
+                <form action="{% url 'home' %}" method="get">
+                    <input type="text" name="q" placeholder="ПОИСК..." value="{{ request.GET.q }}">
+                    <button type="submit">🔍</button>
+                </form>
+            </div>
+
+            <div class="ms-auto">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="btn-cyber">Профиль</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-cyber">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <h6 style="font-family: 'Syncopate'; font-size: 0.6rem; color: #444;">РУБРИКИ</h6>
+                {% for cat in categories %}
+                    <a href="{% url 'category' cat.slug %}" class="cat-link">{{ cat.name }}</a>
+                {% endfor %}
+            </div>
+            <div class="col-lg-10">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    
+<footer class="mt-5 py-5" style="background: #000; border-top: 1px solid rgba(255,0,60,0.2);">
+    <div class="container text-center">
+        <h2 class="navbar-brand mb-4" style="font-size: 1.5rem;">INSIDER</h2>
+        <div class="mb-4">
+            <a href="#" class="text-secondary mx-3 text-decoration-none hover-red">ТГ КАНАЛ</a>
+            <a href="#" class="text-secondary mx-3 text-decoration-none hover-red">ПОДДЕРЖКА</a>
+            <a href="#" class="text-secondary mx-3 text-decoration-none hover-red">РЕКЛАМА</a>
+        </div>
+        <p class="text-muted small">©️ 2026 INSIDER NEWS. Информация — это власть. Все права защищены.</p>
+    </div>
+</footer>
+
+<style>
+    .hover-red:hover { color: var(--primary) !important; transition: 0.3s; }
+</style>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        // ЧАСТИЦЫ (Твои оригинальные)
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80 },
+                "color": { "value": "#ff003c" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 3 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ff003c", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 2 }
+            },
+            "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" } } }
+        });
+
+        // ЗАСТАВКА (Один раз за сессию)
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('splash-screen');
+            if (!sessionStorage.getItem('splashShown')) {
+                setTimeout(() => {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.style.display = 'none', 1000);
+                }, 2500);
+                sessionStorage.setItem('splashShown', 'true');
+            } else {
+                splash.style.display = 'none';
+            }
+        });
+    </script>
+    <script> AOS.init({ duration: 800, once: true }); </script>
 </body>
 </html>

@@ -15,6 +15,7 @@ class Article(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='articles')
     created_at = models.DateTimeField(auto_now_add=True)
     is_hot = models.BooleanField(default=False)
+    tags = models.CharField(max_length=255, blank=True, help_text="США, USA, Amerika, Америка, Россия, Russia, Rus")
     # Поле для лайков
     likes = models.ManyToManyField(User, related_name='news_likes', blank=True)
 

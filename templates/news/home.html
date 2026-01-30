@@ -1,97 +1,92 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row mb-5 pt-4" data-aos="zoom-in">
-    <div class="col-lg-8">
-        <h1 class="display-3 gradient-text mb-2">Insider News</h1>
-        <p class="lead text-secondary">Твой портал в мир главных инсайдов и горячих событий.</p>
-    </div>
-</div>
-
-<div class="row">
-    {% for article in articles %}
-    <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
-        <div class="card h-100">
-            <div class="overflow-hidden position-relative" style="height: 220px;">
-                {% if article.image_url %}
-                    <img src="{{ article.image_url }}" class="card-img-top news-img" alt="{{ article.title }}">
-                {% else %}
-                    <div class="bg-secondary d-flex align-items-center justify-content-center h-100">
-                        <i class="bi bi-image text-dark fs-1"></i>
-                    </div>
-                {% endif %}
-                <span class="badge position-absolute top-0 end-0 m-3 category-badge">
-                    {{ article.category.name }}
-                </span>
+{% if hot_articles and not request.GET.q %}
+<div class="row mb-5">
+    <div class="col-12"><h2 style="font-family: 'Syncopate'; font-size: 1rem; color: var(--primary); margin-bottom: 25px;">🔥 ГОРЯЧЕЕ</h2></div>
+    {% for hot in hot_articles %}
+    <div class="col-md-4 mb-4">
+        <div class="card bg-transparent border-danger h-100 news-card-hover" style="border: 1px solid rgba(255,0,60,0.3) !important; position: relative;">
+            <div style="height: 160px; overflow: hidden;">
+                <img src="{{ hot.image_url }}" class="w-100 h-100 object-fit-cover" alt="">
             </div>
-
-            <div class="card-body d-flex flex-column">
-                <small class="text-secondary mb-2">
-                    <i class="bi bi-calendar3 me-1"></i> {{ article.created_at|date:"d M Y" }}
-                </small>
-                <h4 class="card-title text-white mb-3 fw-bold">{{ article.title }}</h4>
-                <p class="card-text text-secondary small mb-4">
-                    {{ article.content|truncatewords:20 }}
-                </p>
-                
-                <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="{% url 'article' article.pk %}" class="btn-link-red">
-                        Читать дальше <i class="bi bi-arrow-right ms-1"></i>
-                    </a>
-                    <span class="text-secondary small">
-                        <i class="bi bi-heart-fill text-danger"></i> {{ article.total_likes }}
-                    </span>
-                </div>
+            <div class="p-3">
+                <h6 class="fw-bold">
+                    <a href="{% url 'article' hot.pk %}" class="text-white text-decoration-none stretched-link">{{ hot.title }}</a>
+                </h6>
             </div>
         </div>
     </div>
-    {% empty %}
-    <div class="col-12 text-center py-5" data-aos="fade-in">
-        <i class="bi bi-newspaper display-1 text-secondary opacity-25"></i>
-        <p class="mt-3 text-secondary">Пока новостей нет, Мага. Работаем!</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-12"><h2 style="font-family: 'Syncopate'; font-size: 1rem; margin-bottom: 25px;">
+        {% if request.GET.q %} РЕЗУЛЬТАТЫ ПО ЗАПРОСУ {% else %} ПОСЛЕДНИЕ ИНСАЙДЫ {% endif %}
+    </h2></div>
+<div class="news-ticker">
+    <div class="ticker-title">LIVE ИНСАЙДЫ:</div>
+    <marquee scrollamount="6">
+        {% for article in articles|slice:":5" %}
+            <span class="ticker-item">● {{ article.title }}</span>
+        {% endfor %}
+    </marquee>
+</div>
+
+<style>
+    .news-ticker { background: #111; border-top: 1px solid #222; border-bottom: 1px solid #222; display: flex; align-items: center; padding: 5px 0; font-family: 'Syncopate'; font-size: 0.6rem; }
+    .ticker-title { background: var(--primary); color: white; padding: 2px 10px; margin-right: 15px; font-weight: bold; }
+    .ticker-item { margin-right: 50px; color: #ccc; }
+</style>
+    
+    {% for article in articles %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 bg-transparent news-card-hover" style="border: 1px solid rgba(255,255,255,0.1) !important; position: relative; transition: 0.3s;">
+            <div style="height: 200px; overflow: hidden; position: relative;">
+                <img src="{{ article.image_url }}" class="w-100 h-100 object-fit-cover news-img" alt="">
+                <span class="badge position-absolute top-0 end-0 m-2 bg-danger" style="z-index: 2;">{{ article.category.name }}</span>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <h5 class="text-white fw-bold">{{ article.title }}</h5>
+                <p class="text-secondary small">{{ article.content|truncatewords:15 }}</p>
+                
+                <div class="d-flex justify-content-between align-items-center mt-auto">
+                    <a href="{% url 'article' article.pk %}" class="stretched-link custom-read-more">Читать инсайд</a>
+                    <span class="text-secondary small" style="z-index: 2;">❤️ {{ article.total_likes }}</span>
+                </div>
+            </div>
+        </div>
     </div>
     {% endfor %}
 </div>
 
 <style>
-    .news-img {
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+    /* Эффект при наведении на всю карточку */
+    .news-card-hover:hover {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 20px rgba(255, 0, 60, 0.2);
+        cursor: pointer;
     }
 
-    .card:hover .news-img {
-        transform: scale(1.1);
-    }
+    .news-img { transition: 0.5s; }
+    .news-card-hover:hover .news-img { transform: scale(1.05); }
 
-    .category-badge {
-        background: rgba(255, 31, 75, 0.9);
-        backdrop-filter: blur(5px);
-        color: white;
-        font-weight: 600;
-        border-radius: 8px;
-        padding: 6px 12px;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-    }
-
-    .btn-link-red {
-        color: #ff1f4b;
+    /* СТИЛЬ ССЫЛКИ: Чтобы не пропадала и была красной */
+    .custom-read-more {
+        color: var(--primary) !important; 
+        font-family: 'Syncopate'; 
+        font-size: 0.7rem; 
         text-decoration: none;
-        font-weight: 600;
-        font-size: 0.9rem;
+        text-transform: uppercase;
         transition: 0.3s;
     }
 
-    .btn-link-red:hover {
-        color: white;
-        padding-left: 5px;
-    }
-
-    /* Мягкое свечение карточек при наведении */
-    .card {
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    /* При наведении на карточку ссылка становится ярче, но не белой */
+    .news-card-hover:hover .custom-read-more {
+        color: #ff4d7a !important; /* Светло-красный, чтобы выделялся */
+        letter-spacing: 1px;
     }
 </style>
 {% endblock %}
