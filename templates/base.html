@@ -42,6 +42,27 @@
         .cat-link { color: #888; text-decoration: none; display: block; padding: 10px; font-family: 'Syncopate'; font-size: 0.7rem; transition: 0.3s; }
         .cat-link:hover { color: var(--primary); padding-left: 10px; }
         
+
+        /* Фикс заголовков в рубриках и на главной */
+.card h5, .card h6, .card-body h5 {
+    color: #ffffff !important; /* Текст заголовка всегда белый */
+    transition: 0.3s;
+    position: relative;
+    z-index: 5; /* Чтобы текст был над всеми эффектами */
+}
+
+/* Цвет ссылки внутри заголовка */
+.card a, .news-card-hover a {
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+/* Эффект при наведении на карточку: заголовок становится красным */
+.news-card-hover:hover h5, 
+.news-card-hover:hover .card-title {
+    color: var(--primary) !important; 
+    text-shadow: 0 0 10px rgba(255, 0, 60, 0.5);
+}
         /* ФИКС ПРОФИЛЯ */
         .profile-fix label { color: var(--primary) !important; font-family: 'Syncopate'; font-size: 0.7rem; display: block; margin-top: 15px; }
         .profile-fix input { background: rgba(255,255,255,0.05) !important; color: white !important; border: 1px solid #444 !important; border-radius: 0 !important; }
